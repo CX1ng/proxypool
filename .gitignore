@@ -60,8 +60,4 @@ fabric.properties
 .glide/
 _project/
 vendor/*/
-<<<<<<< HEAD
 bin/
-=======
-bin/
->>>>>>> 初始化环境

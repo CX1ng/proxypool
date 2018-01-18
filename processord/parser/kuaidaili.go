@@ -42,15 +42,15 @@ func NewKuaiDaiLi(beginPageNum int, maxPageNum int, channel chan<- *model.ProxyI
 }
 
 // GetProxyIPList 迭代代理网站页面
-func (w *WebSiteKuaiDaiLi) RangePage() {
+func (w *WebSiteKuaiDaiLi) Exec() {
 	for i := w.BeginPageNum; i < w.MaxPageNum; i++ {
-		w.parsePage(i)
+		w.ParsePage(i)
 		time.Sleep(10 * time.Second)
 	}
 }
 
 // GetKuaiDaiLiIPList 解析“快代理”单页面，提取高匿IP
-func (w *WebSiteKuaiDaiLi) parsePage(pageNum int) {
+func (w *WebSiteKuaiDaiLi) ParsePage(pageNum int) {
 	//后续请求连接使用net/http，配置header头
 	doc, err := goquery.NewDocument(fmt.Sprintf("%s/%d/", KuaiDaiLiUrl, pageNum))
 	if err != nil {

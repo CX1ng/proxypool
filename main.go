@@ -1,36 +1,32 @@
 package main
 
 import (
-	"fmt"
-	"time"
+	"flag"
 
+	"github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/db"
-	"github.com/CX1ng/proxypool/model"
+	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/processord/parser"
 )
 
-func test() {
-	channel := make(chan *model.ProxyIP, 100)
-	kdd := parser.NewKuaiDaiLi(1, 5, channel)
-	go func() {
-		for {
-			select {
-			case info := <-channel:
-				fmt.Printf("get ip:%s\n", info.IP)
-				err := model.InsertIP(db.Mysql, info)
-				if err != nil {
-					fmt.Printf("err : %s\n", err)
-				}
-			case <-time.After(60 * time.Second):
-				fmt.Printf("channel quit\n")
-				break
-			}
-		}
-	}()
-	kdd.RangePage()
-}
+var configPath = flag.String("config", "./config/config.dev.toml", "config path")
 
 func main() {
-	db.InitMysql("root:@tcp(127.0.0.1:3306)/proxy_pool?charset=utf8mb4,utf8&parseTime=True&loc=Local")
-	test()
+	flag.Parse()
+
+	//init config
+	common.InitConfig(*configPath)
+
+	//init mysql
+	db.InitMysql(common.Config.Mysql)
+
+	//init processord
+
+	//init Storage
+	storage := processord.NewStorage()
+
+	pro := processord.NewProcessor(parser.NewKuaiDaiLi(1, 5, storage.Queue))
+	go pro.StartExec()
+
+	storage.GetIPInfoFromChannel()
 }
