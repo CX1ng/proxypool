@@ -1,0 +1,5 @@
+[time]
+time_interval = 60
+
+[mysql]
+dsn = "root:@tcp(127.0.0.1:3306)/proxy_pool?charset=utf8mb4,utf8&parseTime=True&loc=Local"
