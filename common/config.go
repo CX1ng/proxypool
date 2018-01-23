@@ -14,7 +14,9 @@ type TimeConfig struct {
 }
 
 type MysqlConfig struct {
-	Dsn string // database dsn
+	Dsn     string // database dsn
+	MaxOpen int
+	MaxIdle int
 }
 
 var Config *config

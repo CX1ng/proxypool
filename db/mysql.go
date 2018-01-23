@@ -15,5 +15,8 @@ func InitMysql(cfg *common.MysqlConfig) {
 	if err != nil {
 		panic(err)
 	}
+	handler.SetMaxIdleConns(cfg.MaxIdle)
+	handler.SetMaxOpenConns(cfg.MaxOpen)
+
 	Mysql = handler
 }
