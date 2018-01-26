@@ -34,7 +34,7 @@ make build
 ```
 make linux_build  
 ```
-执行下载和变linux编译两个操作，同`make deps;make linux_build`  
+执行下载和linux编译两个操作，同`make deps;make linux_build`  
 ```
 make
 ```
@@ -44,7 +44,8 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 ```
 
 ### 现已支持的数据源
-[快代理](https://www.kuaidaili.com/)
+[快代理](https://www.kuaidaili.com/)  
+[西刺代理](http://www.xicidaili.com/nn/1)
 
 ### TODO List
 - [ ] 代理IP验证器  

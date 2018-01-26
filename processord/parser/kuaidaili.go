@@ -6,13 +6,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/model"
 
 	"github.com/PuerkitoBio/goquery"
-)
-
-const (
-	KuaiDaiLiUrl = "https://www.kuaidaili.com/free/inha/"
 )
 
 type WebSiteKuaiDaiLi struct {
@@ -32,7 +29,7 @@ func NewKuaiDaiLi(beginPageNum int, maxPageNum int, channel chan<- *model.ProxyI
 	}
 	once.Do(func() {
 		kddStruct = &WebSiteKuaiDaiLi{
-			BaseUrl:      KuaiDaiLiUrl,
+			BaseUrl:      common.KuaiDaiLiUrl,
 			MaxPageNum:   maxPageNum,
 			BeginPageNum: beginPageNum,
 			channel:      channel,
@@ -45,14 +42,14 @@ func NewKuaiDaiLi(beginPageNum int, maxPageNum int, channel chan<- *model.ProxyI
 func (w *WebSiteKuaiDaiLi) Exec() {
 	for i := w.BeginPageNum; i < w.MaxPageNum; i++ {
 		w.ParsePage(i)
-		time.Sleep(10 * time.Second)
+		time.Sleep(time.Duration(common.Config.Time.TimeInterval) * time.Second)
 	}
 }
 
 // GetKuaiDaiLiIPList 解析“快代理”单页面，提取高匿IP
 func (w *WebSiteKuaiDaiLi) ParsePage(pageNum int) {
 	//后续请求连接使用net/http，配置header头
-	doc, err := goquery.NewDocument(fmt.Sprintf("%s/%d/", KuaiDaiLiUrl, pageNum))
+	doc, err := goquery.NewDocument(fmt.Sprintf("%s/%d/", w.BaseUrl, pageNum))
 	if err != nil {
 		fmt.Printf("Error: %+v\n", err)
 		return
