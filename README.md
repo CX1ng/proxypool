@@ -48,7 +48,7 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 [西刺代理](http://www.xicidaili.com/nn/1)
 
 ### TODO List
-- [ ] 代理IP验证器  
+- [x] 代理IP验证器  
 - [ ] 代理IP定时验证
 - [x] Makefile
 - [ ] Dockerfile

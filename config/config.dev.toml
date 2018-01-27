@@ -1,7 +1,7 @@
 [time]
-time_interval = 60
+timeInterval = 30
 
 [mysql]
 dsn = "root:@tcp(127.0.0.1:3306)/proxy_pool?charset=utf8mb4,utf8&parseTime=True&loc=Local"
-max_open_conn = 1
-max_idle_conn = 2
+maxOpen = 1
+maxIdle = 2
