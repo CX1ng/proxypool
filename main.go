@@ -25,10 +25,10 @@ func main() {
 	//init Storage
 	storage := processord.NewStorage()
 
-	//pro := processord.NewProcessor(parser.NewKuaiDaiLi(1, 5, storage.Queue))
-	//go pro.StartExec()
-	pro := processord.NewProcessor(parser.NewXiCi(1, 5, storage.Queue))
-	go pro.StartExec()
+	kddPro := processord.NewProcessor(parser.NewKuaiDaiLi(1, 100, storage.Queue))
+	go kddPro.StartExec()
+	xcPro := processord.NewProcessor(parser.NewXiCi(1, 100, storage.Queue))
+	go xcPro.StartExec()
 
 	storage.GetIPInfoFromChannel()
 }

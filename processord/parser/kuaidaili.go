@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 	"sync"
 	"time"
@@ -19,7 +20,7 @@ type WebSiteKuaiDaiLi struct {
 	channel      chan<- *model.ProxyIP
 }
 
-var once sync.Once
+var kddOnce sync.Once
 var kddStruct *WebSiteKuaiDaiLi
 
 // NewKuaiDaiLi 实例使用单例模式进行创建，创建多个同一代理网站的实例并没什么用
@@ -27,7 +28,7 @@ func NewKuaiDaiLi(beginPageNum int, maxPageNum int, channel chan<- *model.ProxyI
 	if beginPageNum <= 0 {
 		beginPageNum = 1
 	}
-	once.Do(func() {
+	kddOnce.Do(func() {
 		kddStruct = &WebSiteKuaiDaiLi{
 			BaseUrl:      common.KuaiDaiLiUrl,
 			MaxPageNum:   maxPageNum,
@@ -48,8 +49,20 @@ func (w *WebSiteKuaiDaiLi) Exec() {
 
 // GetKuaiDaiLiIPList 解析“快代理”单页面，提取高匿IP
 func (w *WebSiteKuaiDaiLi) ParsePage(pageNum int) {
+	client := &http.Client{}
+	request, err := http.NewRequest("GET", fmt.Sprintf("%s/%d/", w.BaseUrl, pageNum), nil)
+	if err != nil {
+		fmt.Printf("err:%v\n", err)
+	}
+	request.Header.Add("User-Agent", common.UserAgent)
+	resp, err := client.Do(request)
+	if err != nil {
+		fmt.Printf("Error:%v\n", err)
+		return
+	}
+	defer resp.Body.Close()
 	//后续请求连接使用net/http，配置header头
-	doc, err := goquery.NewDocument(fmt.Sprintf("%s/%d/", w.BaseUrl, pageNum))
+	doc, err := goquery.NewDocumentFromResponse(resp)
 	if err != nil {
 		fmt.Printf("Error: %+v\n", err)
 		return
