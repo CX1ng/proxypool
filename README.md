@@ -12,7 +12,7 @@ go get github.com/CX1ng/proxypool
 ```
 glide install
 ```
-更新依赖库，以获取新版本的依赖，注意清除~/.glide/cache文件夹  
+更新依赖库，以获取新版本的依赖 
 ```
 glide update
 ```
@@ -25,6 +25,10 @@ make update_deps
 下载相关依赖库，同`glide install`  
 ```
 make deps
+```
+执行测试用例
+```
+make test
 ```
 按照当前操作系统进行编译，生成bin文件  
 ```
