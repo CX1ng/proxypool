@@ -25,6 +25,9 @@ build:
 linux_build: deps
 	$(COMMONENVVAR) $(BUILDENVVAR) make build
 
+test:
+	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/model
+
 clean:
 	@rm -rf bin _project vendor
 

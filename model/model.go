@@ -5,7 +5,6 @@ import (
 )
 
 type ProxyIP struct {
-	ID             int       //编号
 	IP             string    //代理IP
 	Port           int       //代理端口
 	Type           string    //类型(http/https)
