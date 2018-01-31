@@ -1,5 +1,5 @@
 ### Golang IP代理池
-
+[![Build Status](https://travis-ci.org/CX1ng/proxypool.svg?branch=master)](https://travis-ci.org/CX1ng/proxypool)
 #### 安装  
 基于Golang 1.9开发
 ```
@@ -59,3 +59,4 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 - [ ] 获取存储的代理IP
 - [ ] Restful API
 - [ ] log
+- [x] 持续集成
