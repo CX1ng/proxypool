@@ -65,7 +65,7 @@ func TestServer_InsertIP(t *testing.T) {
 	_assert.Equal(resOrigin, TEST_ORIGIN)
 }
 
-func TestServer_ExportAll(t *testing.T) {
+func TestServer_GetLimitProxyIP(t *testing.T) {
 	_assert := assert.New(t)
 	_SQL := `delete from ip_list`
 	_, err := db.Mysql.Exec(_SQL)
@@ -87,9 +87,12 @@ func TestServer_ExportAll(t *testing.T) {
 		t.Fatalf("Error:%v\n", err)
 	}
 
-	resp, err := ExportAll(db.Mysql)
+	resp, err := GetLimitProxyIP(db.Mysql, 0)
 	_assert.Equal(err, nil)
 	_assert.Contains(resp, fmt.Sprintf("http://%s:%d", TEST_IP, port1))
 	_assert.Contains(resp, fmt.Sprintf("http://%s:%d", TEST_IP, port2))
 	_assert.Contains(resp, fmt.Sprintf("http://%s:%d", TEST_IP, port3))
+	resp, err = GetLimitProxyIP(db.Mysql, 2)
+	_assert.Equal(err, nil)
+	_assert.Equal(len(resp), 2)
 }

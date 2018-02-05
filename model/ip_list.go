@@ -3,6 +3,8 @@ package model
 import (
 	"database/sql"
 	"fmt"
+
+	"github.com/CX1ng/proxypool/common"
 )
 
 func InsertIP(db *sql.DB, info *ProxyIP) error {
@@ -14,11 +16,20 @@ func InsertIP(db *sql.DB, info *ProxyIP) error {
 	return nil
 }
 
-func ExportAll(db *sql.DB) ([]string, error) {
-	var ip string
+func GetLimitProxyIP(db *sql.DB, limit int) ([]string, error) {
+	var ip, _SQL string
 	var port int
-	_SQL := `select ip,port from ip_list`
-	rows, err := db.Query(_SQL)
+	var rows *sql.Rows
+	var err error
+	if limit < 0 || limit > common.GetLimit {
+		return nil, common.ModelLimitInvalid
+	} else if limit == 0 {
+		_SQL = `select ip,port from ip_list `
+		rows, err = db.Query(_SQL)
+	} else {
+		_SQL = `select ip,port from ip_list limit ?`
+		rows, err = db.Query(_SQL, limit)
+	}
 	if err != nil {
 		return nil, err
 	}
