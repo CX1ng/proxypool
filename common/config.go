@@ -5,8 +5,9 @@ import (
 )
 
 type config struct {
-	Time  *TimeConfig
-	Mysql *MysqlConfig
+	Listen string
+	Time   *TimeConfig
+	Mysql  *MysqlConfig
 }
 
 type TimeConfig struct {
