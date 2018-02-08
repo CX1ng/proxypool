@@ -56,7 +56,7 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 - [ ] 代理IP定时验证
 - [x] Makefile
 - [ ] Dockerfile
-- [ ] 获取存储的代理IP
-- [ ] Restful API
+- [x] 获取存储的代理IP
+- [x] Restful API
 - [ ] log
 - [x] 持续集成
