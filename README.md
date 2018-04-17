@@ -60,3 +60,4 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 - [x] Restful API
 - [ ] log
 - [x] 持续集成
+- [x] 检测匿名性网站
