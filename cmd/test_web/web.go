@@ -1,4 +1,4 @@
-package test_web
+package main
 
 import (
 	"encoding/json"

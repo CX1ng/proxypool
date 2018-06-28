@@ -15,11 +15,7 @@ const (
 	GetLimit = 20
 )
 
-// Parser
-const (
-	KuaiDaiLiUrl = "https://www.kuaidaili.com/free/inha/"
-	XiCi         = "http://www.xicidaili.com/nn/"
-)
+var WebUrl = make(map[string]string)
 
 // Validator
 const (
@@ -27,3 +23,12 @@ const (
 	TIME_OUT  = 5
 	TITLE     = "百度一下，你就知道"
 )
+
+var ProxyIPFields []string
+
+func init() {
+	WebUrl["kuaidaili"] = "https://www.kuaidaili.com/free/inha/"
+	WebUrl["xici"] = "http://www.xicidaili.com/nn/"
+
+	ProxyIPFields = []string{"ip", "port", "type", "origin", "raw_time", "region", "capture_time", "last_verify_time", "create_time"}
+}

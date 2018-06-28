@@ -11,10 +11,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-const (
-	TIME_OUT = 10
-)
-
 //现在只是单条验证，以后是不是可以搞成批量验证
 func VerifyProxy(ip, port string) bool {
 	request, err := http.NewRequest("Get", common.VerifyUrl, nil)

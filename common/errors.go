@@ -4,4 +4,6 @@ import (
 	"errors"
 )
 
-var ModelLimitInvalid = errors.New("limit Invalid")
+var (
+	ModelLimitInvalid = errors.New("limit Invalid")
+)

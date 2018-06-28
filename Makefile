@@ -19,14 +19,15 @@ update_deps:
 
 #编译
 build:
-	go build -o bin/$(CURRENT_GIT_REPO)
+	go build -o bin/$(CURRENT_GIT_REPO) ./cmd/proxy_pool
+	go build -o bin/web ./cmd/test_web
 	
 #交叉编译出linux下的静态可执行文件
 linux_build: deps
 	$(COMMONENVVAR) $(BUILDENVVAR) make build
 
 test:
-	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/model
+	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/dao
 
 clean:
 	@rm -rf bin _project vendor

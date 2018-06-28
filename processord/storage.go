@@ -6,19 +6,21 @@ import (
 	"time"
 
 	"github.com/CX1ng/proxypool/common"
-	"github.com/CX1ng/proxypool/db"
-	"github.com/CX1ng/proxypool/model"
+	. "github.com/CX1ng/proxypool/dao"
+	"github.com/CX1ng/proxypool/models"
 )
 
 type Storage struct {
-	Done  <-chan bool
-	Queue chan *model.ProxyIP
+	done  <-chan bool
+	Queue chan []models.ProxyIP
+	db    DBConnector
 }
 
 func NewStorage() *Storage {
 	return &Storage{
-		Done:  make(chan bool),
-		Queue: make(chan *model.ProxyIP, common.StorageChannelCapacity),
+		done:  make(chan bool),
+		Queue: make(chan []models.ProxyIP, common.StorageChannelCapacity),
+		db:    DBConnector{DB: Mysql},
 	}
 }
 
@@ -29,9 +31,9 @@ func (s *Storage) GetIPInfoFromChannel() {
 		select {
 		case info := <-s.Queue:
 			routinesCount <- true
-			go verifyAndInsert(info)
+			go verifyAndInsert(s.db, info)
 			<-routinesCount
-		case <-s.Done:
+		case <-s.done:
 			break
 		case <-time.After(common.StorageChannelTimeout * time.Second):
 			fmt.Printf("channel quit\n")
@@ -43,12 +45,24 @@ func (s *Storage) GetIPInfoFromChannel() {
 	}
 }
 
-func verifyAndInsert(info *model.ProxyIP) {
-	if VerifyProxy(info.IP, strconv.Itoa(info.Port)) == false {
+func verifyAndInsert(db DBConnector, infos []models.ProxyIP) {
+	ipList := make([]models.ProxyIP, 0, len(infos))
+	for _, info := range infos {
+		if ok := VerifyProxy(info["ip"].(string), strconv.Itoa(info["port"].(int))); !ok {
+			continue
+		}
+		info["last_verify_time"] = time.Now()
+		info["create_time"] = time.Now()
+		ipList = append(ipList, info)
+	}
+
+	if len(ipList) == 0 {
 		return
 	}
-	fmt.Printf("Insert %s into mysql\n", info.IP)
-	err := model.InsertIP(db.Mysql, info)
+	for _, info := range ipList {
+		fmt.Printf("Proxy_ip:%+v\n", info)
+	}
+	err := db.BulkInsertProxyIPs(ipList)
 	if err != nil {
 		fmt.Printf("err : %s\n", err)
 	}

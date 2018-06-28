@@ -2,11 +2,11 @@ package server
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
-	"github.com/CX1ng/proxypool/db"
-	"github.com/CX1ng/proxypool/model"
+	"github.com/CX1ng/proxypool/dao"
 )
 
 type IPList struct {
@@ -20,7 +20,9 @@ func getProxyIPWithLimit(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Error:" + err.Error()))
 		return
 	}
-	resp, err := model.GetLimitProxyIP(db.Mysql, limit)
+	fmt.Printf("limit:%d\n", limit)
+	db := dao.DBConnector{DB: dao.Mysql}
+	resp, err := db.GetLimitProxyIP(limit)
 	if err != nil {
 		w.Write([]byte("Error:" + err.Error()))
 		return
