@@ -1,4 +1,5 @@
 listen = ":7080"
+storage = "mysql"
 
 [time]
 timeInterval = 30

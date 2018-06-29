@@ -12,23 +12,30 @@ import (
 
 var configPath = flag.String("config", "./config/config.dev.toml", "config path")
 
+func InitStorage() (processord.Import, error) {
+	switch common.Config.Storage {
+	case "Mysql":
+		dao.InitMysql(common.Config.Mysql)
+		dao.InitDatabase()
+		return dao.DBConnector{DB: dao.Mysql}, nil
+	default:
+		return nil, common.StorageNotSupport
+	}
+}
+
 func main() {
 	flag.Parse()
 
 	//init config
 	common.InitConfig(*configPath)
 
-	//init mysql
-	dao.InitMysql(common.Config.Mysql)
+	//init storage
+	db, err := InitStorage()
+	if err != nil {
+		panic(err)
+	}
 
-	//init database
-	dao.InitDatabase()
-
-	// 考虑将采集相关操作交由Restful API控制
-	//init processord
-
-	//init Storage
-	storage := processord.NewStorage()
+	storage := processord.NewStorage(db)
 	kddPro, err := processord.NewProcessor("kuaidaili", 1, 100, storage.Queue)
 	if err != nil {
 		panic(err)

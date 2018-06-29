@@ -1,13 +1,16 @@
 package common
 
 import (
+	"strings"
+
 	"github.com/BurntSushi/toml"
 )
 
 type config struct {
-	Listen string
-	Time   *TimeConfig
-	Mysql  *MysqlConfig
+	Listen  string
+	Storage string
+	Time    *TimeConfig
+	Mysql   *MysqlConfig
 }
 
 type TimeConfig struct {
@@ -20,12 +23,19 @@ type MysqlConfig struct {
 	MaxIdle int
 }
 
+type ProxyPool struct {
+	Storage string
+}
+
 var Config *config
 
 func InitConfig(path string) {
 	cfg := new(config)
 	if _, err := toml.DecodeFile(path, cfg); err != nil {
 		panic(err)
+	}
+	if _, ok := StorageMaps[strings.ToLower(cfg.Storage)]; !ok {
+		panic(StorageNotSupport)
 	}
 	Config = cfg
 }

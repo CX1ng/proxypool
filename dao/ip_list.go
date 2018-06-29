@@ -14,7 +14,7 @@ type DBConnector struct {
 	DB *sql.DB
 }
 
-func (d *DBConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
+func (d DBConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
 	length := len(ips)
 	if length == 0 {
 		return errors.New("IPs Is Empty")
@@ -48,7 +48,7 @@ func (d *DBConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
 	return nil
 }
 
-func (d *DBConnector) GetLimitProxyIP(limit int) ([]string, error) {
+func (d DBConnector) GetLimitProxyIP(limit int) ([]string, error) {
 	var ip, _SQL string
 	var port int
 	var rows *sql.Rows
