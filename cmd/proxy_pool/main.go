@@ -1,12 +1,12 @@
 package main
 
 import (
-	"CX1ng/proxypool/processord"
 	"flag"
 	"net/http"
 
 	"github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/dao"
+	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/server"
 )
 

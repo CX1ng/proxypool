@@ -14,7 +14,6 @@ services:
 before_install:
 # init database
   - mysql -e 'CREATE DATABASE IF NOT EXISTS proxy_pool;'
-  - pwd
   - cd ${GOPATH}/src/github.com/CX1ng/proxypool
   - mysql -e 'USE proxy_pool;SOURCE sql/ip_list.sql;'
 # dowload software
