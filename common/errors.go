@@ -5,6 +5,8 @@ import (
 )
 
 var (
-	ModelLimitInvalid = errors.New("limit Invalid")
-	StorageNotSupport = errors.New("Storage Type Not Support")
+	ErrModelLimitInvalid    = errors.New("limit Invalid")
+	ErrStorageNotSupport    = errors.New("Storage Type Not Support")
+	ErrMysqlHandlerNotInit  = errors.New("Mysql Handler Not Init")
+	ErrConfigHandlerNotInit = errors.New("Config Handler Not Init")
 )

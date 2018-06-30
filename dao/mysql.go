@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -9,8 +10,8 @@ import (
 )
 
 const (
-	createDatabaseSql = `CREATE DATABASE IF NOT EXISTS proxy_pool`
-	dropDatabaseSql   = `DROP DATABASE proxy_pool`
+	createDatabaseSql = `CREATE DATABASE IF NOT EXISTS %s`
+	dropDatabaseSql   = `DROP DATABASE %s`
 	createIPListSql   = `CREATE TABLE IF NOT EXISTS ip_list(
 		id bigint PRIMARY KEY AUTO_INCREMENT,
 		ip varchar(16) NOT NULL COMMENT "抓取的代理地址",
@@ -24,11 +25,24 @@ const (
 		create_time datetime NOT NULL COMMENT "创建时间",
 		UNIQUE KEY(ip, port) 
 	)DEFAULT CHARSET=utf8`
+	userDatabaseSql = `use %s`
 )
 
-var Mysql *sql.DB
+var sqlExecHandler *sql.DB
 
-func InitMysql(cfg *common.MysqlConfig) {
+func GetDBHandler() *sql.DB {
+	if sqlExecHandler == nil {
+		panic(common.ErrMysqlHandlerNotInit)
+	}
+	return sqlExecHandler
+}
+
+func InitMysqlStorage(cfg *common.MysqlConfig) {
+	initMysql(cfg)
+	initDatabase(cfg)
+}
+
+func initMysql(cfg *common.MysqlConfig) {
 	handler, err := sql.Open("mysql", cfg.Dsn)
 	if err != nil {
 		panic(err)
@@ -36,20 +50,22 @@ func InitMysql(cfg *common.MysqlConfig) {
 	handler.SetMaxIdleConns(cfg.MaxIdle)
 	handler.SetMaxOpenConns(cfg.MaxOpen)
 
-	Mysql = handler
+	sqlExecHandler = handler
 }
 
-func InitDatabase() {
-	if Mysql == nil {
-		panic("Mysql Handler Not Init")
+func initDatabase(cfg *common.MysqlConfig) {
+	if sqlExecHandler == nil {
+		panic(common.ErrMysqlHandlerNotInit)
 	}
-	if _, err := Mysql.Exec(createDatabaseSql); err != nil {
+	createDbSql := fmt.Sprintf(createDatabaseSql, cfg.DbName)
+	if _, err := sqlExecHandler.Exec(createDbSql); err != nil {
 		panic(err)
 	}
-	if _, err := Mysql.Exec("use proxy_pool"); err != nil {
+	useDbSql := fmt.Sprintf(userDatabaseSql, cfg.DbName)
+	if _, err := sqlExecHandler.Exec(useDbSql); err != nil {
 		panic(err)
 	}
-	if _, err := Mysql.Exec(createIPListSql); err != nil {
+	if _, err := sqlExecHandler.Exec(createIPListSql); err != nil {
 		panic(err)
 	}
 }

@@ -54,7 +54,7 @@ func (d DBConnector) GetLimitProxyIP(limit int) ([]string, error) {
 	var rows *sql.Rows
 	var err error
 	if limit < 0 || limit > common.GetLimit {
-		return nil, common.ModelLimitInvalid
+		return nil, common.ErrModelLimitInvalid
 	} else if limit == 0 {
 		_SQL = `select ip,port from ip_list `
 		rows, err = d.DB.Query(_SQL)

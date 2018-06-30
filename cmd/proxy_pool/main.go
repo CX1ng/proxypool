@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"net/http"
+	"strings"
 
-	"github.com/CX1ng/proxypool/common"
-	"github.com/CX1ng/proxypool/dao"
+	. "github.com/CX1ng/proxypool/common"
+	. "github.com/CX1ng/proxypool/dao"
 	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/server"
 )
@@ -13,13 +14,12 @@ import (
 var configPath = flag.String("config", "./config/config.dev.toml", "config path")
 
 func InitStorage() (processord.Import, error) {
-	switch common.Config.Storage {
-	case "Mysql":
-		dao.InitMysql(common.Config.Mysql)
-		dao.InitDatabase()
-		return dao.DBConnector{DB: dao.Mysql}, nil
+	switch strings.ToLower(GetConfigHandler().Storage) {
+	case "mysql":
+		InitMysqlStorage(GetConfigHandler().Mysql)
+		return DBConnector{DB: GetDBHandler()}, nil
 	default:
-		return nil, common.StorageNotSupport
+		return nil, ErrStorageNotSupport
 	}
 }
 
@@ -27,7 +27,7 @@ func main() {
 	flag.Parse()
 
 	//init config
-	common.InitConfig(*configPath)
+	InitConfig(*configPath)
 
 	//init storage
 	db, err := InitStorage()
@@ -50,7 +50,7 @@ func main() {
 	go storage.GetIPInfoFromChannel()
 
 	router := server.NewProxyPoolRouter()
-	if err := http.ListenAndServe(common.Config.Listen, router); err != nil {
+	if err := http.ListenAndServe(GetConfigHandler().Listen, router); err != nil {
 		panic(err)
 	}
 }

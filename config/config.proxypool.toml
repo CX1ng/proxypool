@@ -6,5 +6,6 @@ timeInterval = 30
 
 [mysql]
 dsn = "root:@tcp(127.0.0.1:3306)/?charset=utf8mb4,utf8&parseTime=True&loc=Local"
+dbName =  "proxy_pool"
 maxOpen = 1
 maxIdle = 2

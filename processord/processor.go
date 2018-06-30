@@ -46,7 +46,7 @@ func NewProcessor(name string, beginPageNum, maxPageNum int, queue chan []models
 func (p *Processor) Run() {
 	for i := p.beginPageNum; i < p.maxPageNum; i++ {
 		p.ParserPage(i)
-		time.Sleep(time.Duration(Config.Time.TimeInterval) * time.Second)
+		time.Sleep(time.Duration(GetConfigHandler().Time.TimeInterval) * time.Second)
 	}
 }
 

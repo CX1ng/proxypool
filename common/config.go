@@ -19,6 +19,7 @@ type TimeConfig struct {
 
 type MysqlConfig struct {
 	Dsn     string // database dsn
+	DbName  string
 	MaxOpen int
 	MaxIdle int
 }
@@ -27,7 +28,7 @@ type ProxyPool struct {
 	Storage string
 }
 
-var Config *config
+var configHandler *config
 
 func InitConfig(path string) {
 	cfg := new(config)
@@ -35,7 +36,14 @@ func InitConfig(path string) {
 		panic(err)
 	}
 	if _, ok := StorageMaps[strings.ToLower(cfg.Storage)]; !ok {
-		panic(StorageNotSupport)
+		panic(ErrStorageNotSupport)
 	}
-	Config = cfg
+	configHandler = cfg
+}
+
+func GetConfigHandler() *config {
+	if configHandler == nil {
+		panic(ErrConfigHandlerNotInit)
+	}
+	return configHandler
 }
