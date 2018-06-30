@@ -36,16 +36,13 @@ func main() {
 	}
 
 	storage := processord.NewStorage(db)
-	kddPro, err := processord.NewProcessor("kuaidaili", 1, 100, storage.Queue)
-	if err != nil {
-		panic(err)
+	for _, detail := range GetConfigHandler().ProxyWebs {
+		processor, err := processord.NewProcessor(detail, storage.Queue)
+		if err != nil {
+			panic(err)
+		}
+		go processor.Run()
 	}
-	go kddPro.Run()
-	xcPro, err := processord.NewProcessor("xici", 1, 100, storage.Queue)
-	if err != nil {
-		panic(err)
-	}
-	go xcPro.Run()
 
 	go storage.GetIPInfoFromChannel()
 

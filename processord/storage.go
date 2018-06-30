@@ -50,8 +50,8 @@ func verifyAndInsert(imp Import, infos []models.ProxyIP) {
 		if ok := VerifyProxy(info["ip"].(string), strconv.Itoa(info["port"].(int))); !ok {
 			continue
 		}
-		info["last_verify_time"] = time.Now()
-		info["create_time"] = time.Now()
+		info["last_verify_time"] = time.Now().Format("2006-01-02 15:04:05")
+		info["create_time"] = time.Now().Format("2006-01-02 15:04:05")
 		ipList = append(ipList, info)
 	}
 

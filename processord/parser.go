@@ -35,7 +35,7 @@ func KuaiDaiLiPageParser(doc *goquery.Document) []ProxyIP {
 		ipInfo["origin"] = "快代理"
 		ipInfo["region"] = region
 		ipInfo["raw_time"] = rawTime
-		ipInfo["capture_time"] = time.Now()
+		ipInfo["capture_time"] = time.Now().Format("2006-01-02 15:04:05")
 		ips = append(ips, ipInfo)
 	})
 	return ips
@@ -57,7 +57,7 @@ func XiciPageParser(doc *goquery.Document) []ProxyIP {
 		ipInfo["origin"] = "快代理"
 		ipInfo["region"] = region
 		ipInfo["raw_time"] = rawTime
-		ipInfo["capture_time"] = time.Now()
+		ipInfo["capture_time"] = time.Now().Format("2006-01-02 15:04:05")
 		ips = append(ips, ipInfo)
 	})
 	return ips

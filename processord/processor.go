@@ -14,39 +14,48 @@ import (
 )
 
 type Processor struct {
-	Name         string
-	beginPageNum int
-	maxPageNum   int
-	url          string
-	parser       Parser
-	queue        chan []models.ProxyIP
+	url    string
+	parser Parser
+	queue  chan []models.ProxyIP
+	config *webDetail
 }
 
-func NewProcessor(name string, beginPageNum, maxPageNum int, queue chan []models.ProxyIP) (*Processor, error) {
-	url, ok := WebUrl[strings.ToLower(name)]
+type webDetail struct {
+	name         string
+	beginPageNum int
+	endPageNum   int
+	timeInterval int
+}
+
+func NewProcessor(detail WebDetail, queue chan []models.ProxyIP) (*Processor, error) {
+	url, ok := WebUrl[strings.ToLower(detail.Name)]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Proxy Web %s Not Support", name))
+		return nil, errors.New(fmt.Sprintf("Proxy Web %s Not Support", detail.Name))
 	}
-	parser, ok := WebParser[strings.ToLower(name)]
+	parser, ok := WebParser[strings.ToLower(detail.Name)]
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Proxy Web %s Not Support", name))
+		return nil, errors.New(fmt.Sprintf("Proxy Web %s Not Support", detail.Name))
 	}
 
 	// 获取解析器及baseUrl
 	return &Processor{
-		Name:         name,
-		beginPageNum: beginPageNum,
-		maxPageNum:   maxPageNum,
-		url:          url,
-		parser:       parser,
-		queue:        queue,
+		url:    url,
+		parser: parser,
+		queue:  queue,
+		config: &webDetail{
+			name:         detail.Name,
+			beginPageNum: detail.BeginPageNum,
+			endPageNum:   detail.EndPageNum,
+			timeInterval: detail.TimeInterval,
+		},
 	}, nil
 }
 
 func (p *Processor) Run() {
-	for i := p.beginPageNum; i < p.maxPageNum; i++ {
+	// TODO:最大页数不能超过网站最大页数
+	for i := p.config.beginPageNum; i < p.config.endPageNum; i++ {
 		p.ParserPage(i)
-		time.Sleep(time.Duration(GetConfigHandler().Time.TimeInterval) * time.Second)
+		time.Sleep(time.Duration(p.config.timeInterval) * time.Second)
 	}
 }
 

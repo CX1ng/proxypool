@@ -7,14 +7,10 @@ import (
 )
 
 type config struct {
-	Listen  string
-	Storage string
-	Time    *TimeConfig
-	Mysql   *MysqlConfig
-}
-
-type TimeConfig struct {
-	TimeInterval int //请求的时间间隔
+	Listen    string
+	Storage   string
+	Mysql     *MysqlConfig
+	ProxyWebs []WebDetail `toml:"proxy_webs"`
 }
 
 type MysqlConfig struct {
@@ -22,6 +18,13 @@ type MysqlConfig struct {
 	DbName  string
 	MaxOpen int
 	MaxIdle int
+}
+
+type WebDetail struct {
+	Name         string
+	BeginPageNum int
+	EndPageNum   int
+	TimeInterval int
 }
 
 type ProxyPool struct {

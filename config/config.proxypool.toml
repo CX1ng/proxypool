@@ -1,11 +1,21 @@
 listen = ":7080"
 storage = "mysql"
 
-[time]
-timeInterval = 30
-
 [mysql]
 dsn = "root:@tcp(127.0.0.1:3306)/?charset=utf8mb4,utf8&parseTime=True&loc=Local"
 dbName =  "proxy_pool"
 maxOpen = 1
 maxIdle = 2
+
+# 配置要爬取的代理网站
+[proxy_webs]
+[[proxy_webs.detail]]
+name = "kuaidaili" #现支持“kuaidaili”、“xici”
+beginPageNum = 0   #开启爬取页数
+endPageNum = 0     #最大页数, 0为不限制，
+timeInterval = 30
+[[proxy_webs.detail]]
+name = "xici"
+beginPageNum = 0 
+endPageNum = 0
+timeInterval = 30
