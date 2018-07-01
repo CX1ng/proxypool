@@ -1,16 +1,15 @@
 package processord
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 
 	. "github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/models"
+	. "github.com/CX1ng/proxypool/processord/parser"
 )
 
 type Processor struct {
@@ -28,18 +27,15 @@ type webDetail struct {
 }
 
 func NewProcessor(detail WebDetail, queue chan []models.ProxyIP) (*Processor, error) {
-	url, ok := WebUrl[strings.ToLower(detail.Name)]
+	parserSetter, ok := WebParsers.GetParserSetter(detail.Name)
 	if !ok {
-		return nil, errors.New(fmt.Sprintf("Proxy Web %s Not Support", detail.Name))
+		return nil, ErrParserNotSupport
 	}
-	parser, ok := WebParser[strings.ToLower(detail.Name)]
-	if !ok {
-		return nil, errors.New(fmt.Sprintf("Proxy Web %s Not Support", detail.Name))
-	}
+	parser := parserSetter.SettingParser()
 
 	// 获取解析器及baseUrl
 	return &Processor{
-		url:    url,
+		url:    parser.GetUrl(),
 		parser: parser,
 		queue:  queue,
 		config: &webDetail{
@@ -61,7 +57,7 @@ func (p *Processor) Run() {
 
 func (p *Processor) ParserPage(pageNum int) error {
 	client := &http.Client{}
-	request, err := http.NewRequest("GET", fmt.Sprintf("%s/%d/", p.url, pageNum), nil)
+	request, err := http.NewRequest("GET", fmt.Sprintf("%s%d/", p.url, pageNum), nil)
 	if err != nil {
 		return err
 	}
@@ -76,7 +72,7 @@ func (p *Processor) ParserPage(pageNum int) error {
 	if err != nil {
 		return err
 	}
-	infoList := p.parser(doc)
+	infoList := p.parser.PageParser(doc)
 
 	fmt.Printf("Processor:%+v\n", len(infoList))
 	p.queue <- infoList

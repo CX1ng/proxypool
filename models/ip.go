@@ -1,14 +1,12 @@
 package models
 
-import (
-	. "github.com/CX1ng/proxypool/common"
-)
+var proxyIPFields = []string{"ip", "port", "type", "origin", "raw_time", "region", "capture_time", "last_verify_time", "create_time"}
 
 type ProxyIP map[string]interface{}
 
 func NewProxyIP() ProxyIP {
 	proxyIPMap := make(map[string]interface{})
-	for _, name := range ProxyIPFields {
+	for _, name := range proxyIPFields {
 		proxyIPMap[name] = nil
 	}
 

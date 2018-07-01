@@ -10,7 +10,7 @@ type config struct {
 	Listen    string
 	Storage   string
 	Mysql     *MysqlConfig
-	ProxyWebs []WebDetail `toml:"proxy_webs"`
+	ProxyWebs []WebDetail `toml:"proxy_web"`
 }
 
 type MysqlConfig struct {

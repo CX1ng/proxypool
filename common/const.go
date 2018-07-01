@@ -15,7 +15,6 @@ const (
 	GetLimit = 20
 )
 
-var WebUrl = make(map[string]string)
 var StorageMaps = make(map[string]bool)
 
 // Validator
@@ -25,13 +24,7 @@ const (
 	TITLE     = "百度一下，你就知道"
 )
 
-var ProxyIPFields []string
-
 func init() {
-	WebUrl["kuaidaili"] = "https://www.kuaidaili.com/free/inha/"
-	WebUrl["xici"] = "http://www.xicidaili.com/nn/"
-
 	StorageMaps["mysql"] = true
 
-	ProxyIPFields = []string{"ip", "port", "type", "origin", "raw_time", "region", "capture_time", "last_verify_time", "create_time"}
 }
