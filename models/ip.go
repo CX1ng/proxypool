@@ -42,11 +42,11 @@ func (p ProxyIP) IP() (string, error) {
 }
 
 func (p ProxyIP) Port() (int64, error) {
-	port, ok := p["ip"].(float64)
+	port, ok := p["port"].(int64)
 	if !ok {
 		return 0, errors.New("Get Port Failed")
 	}
-	return int64(port), nil
+	return port, nil
 }
 
 func (p ProxyIP) Type() (string, error) {
