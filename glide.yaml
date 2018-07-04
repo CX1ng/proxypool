@@ -2,6 +2,7 @@ package: github.com/CX1ng/proxypool
 import:
 - package: github.com/BurntSushi/toml
 - package: github.com/PuerkitoBio/goquery
+- package: github.com/axgle/mahonia
 - package: github.com/go-chi/chi
   subpackages:
   - middleware
