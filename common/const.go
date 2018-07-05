@@ -1,8 +1,8 @@
 package common
 
 const (
-	StorageChannelTimeout  = 60
 	StorageChannelCapacity = 100
+	StorageConcurrencyRoutineCount = 20
 )
 
 // common
