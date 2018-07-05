@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 
@@ -18,6 +19,9 @@ func TestIp66PageParser(t *testing.T) {
 	as.Nil(err)
 	request.Header.Add("User-Agent", common.UserAgent)
 	resp, err := client.Do(request)
+	if err != nil {
+		fmt.Printf("err:%+v\n\n", err)
+	}
 	as.Nil(err)
 	defer resp.Body.Close()
 	doc, err := goquery.NewDocumentFromResponse(resp)
