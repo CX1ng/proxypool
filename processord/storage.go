@@ -2,7 +2,6 @@ package processord
 
 import (
 	"fmt"
-	"strconv"
 	"time"
 
 	"github.com/CX1ng/proxypool/common"
@@ -37,14 +36,7 @@ func (s *Storage) GetIPInfoFromChannel() {
 }
 
 func (s *Storage) verifyAndInsert(infos []models.ProxyIP) {
-	for _, info := range infos {
-		if ok := VerifyProxy(info["ip"].(string), strconv.Itoa(info["port"].(int))); !ok {
-			continue
-		}
-		info["last_verify_time"] = time.Now().Format("2006-01-02 15:04:05")
-		info["create_time"] = time.Now().Format("2006-01-02 15:04:05")
-		fmt.Printf("Proxy_ip:%+v\n", info)
-	}
+	infos = BulkVerifyProxyIPs(infos)
 	if len(infos) == 0 {
 		return
 	}

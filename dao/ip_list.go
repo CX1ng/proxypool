@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/CX1ng/proxypool/common"
 	. "github.com/CX1ng/proxypool/models"
@@ -24,7 +25,9 @@ func (d DBConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
 	for key, _ := range ips[0] {
 		keys = append(keys, key)
 	}
+	now := time.Now().Format("2006-01-02 15:04:05")
 	for _, ip := range ips {
+		ip.Set("create_time", now)
 		for _, key := range keys {
 			values = append(values, ip[key])
 		}
