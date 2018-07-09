@@ -6,6 +6,7 @@ import (
 
 	"github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/models"
+	. "github.com/CX1ng/proxypool/dao"
 )
 
 type Storage struct {

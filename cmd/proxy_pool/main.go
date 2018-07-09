@@ -7,13 +7,14 @@ import (
 
 	. "github.com/CX1ng/proxypool/common"
 	. "github.com/CX1ng/proxypool/dao"
+	. "github.com/CX1ng/proxypool/dao/mysql"
 	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/server"
 )
 
 var configPath = flag.String("config", "./config/config.dev.toml", "config path")
 
-func InitStorage() (processord.Import, error) {
+func InitStorage() (Import, error) {
 	switch strings.ToLower(GetConfigHandler().Storage) {
 	case "mysql":
 		InitMysqlStorage(GetConfigHandler().Mysql)

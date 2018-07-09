@@ -1,4 +1,4 @@
-package processord
+package dao
 
 import (
 	. "github.com/CX1ng/proxypool/models"

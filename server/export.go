@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/CX1ng/proxypool/dao"
+	. "github.com/CX1ng/proxypool/dao/mysql"
 )
 
 type IPList struct {
@@ -21,7 +21,7 @@ func getProxyIPWithLimit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Printf("limit:%d\n", limit)
-	db := dao.DBConnector{DB: dao.GetDBHandler()}
+	db := DBConnector{DB: GetDBHandler()}
 	resp, err := db.GetLimitProxyIP(limit)
 	if err != nil {
 		w.Write([]byte("Error:" + err.Error()))
