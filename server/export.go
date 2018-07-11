@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 
-	. "github.com/CX1ng/proxypool/dao/mysql"
+	"github.com/CX1ng/proxypool/common"
+	. "github.com/CX1ng/proxypool/dao"
 )
 
 type IPList struct {
@@ -21,7 +23,12 @@ func getProxyIPWithLimit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Printf("limit:%d\n", limit)
-	db := DBConnector{DB: GetDBHandler()}
+	initializer, ok := StorageInitializer[strings.ToLower(common.GetConfigHandler().Storage)]
+	if !ok {
+		w.Write([]byte("Error: storage handler not init"))
+		return
+	}
+	db := initializer()
 	resp, err := db.GetLimitProxyIP(limit)
 	if err != nil {
 		w.Write([]byte("Error:" + err.Error()))

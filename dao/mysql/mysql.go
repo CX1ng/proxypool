@@ -32,12 +32,12 @@ var sqlExecHandler *sql.DB
 
 func GetDBHandler() *sql.DB {
 	if sqlExecHandler == nil {
-		panic(common.ErrMysqlHandlerNotInit)
+		initMysqlStorage(common.GetConfigHandler().Mysql)
 	}
 	return sqlExecHandler
 }
 
-func InitMysqlStorage(cfg *common.MysqlConfig) {
+func initMysqlStorage(cfg *common.MysqlConfig) {
 	initMysql(cfg)
 	initDatabase(cfg)
 }

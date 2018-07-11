@@ -62,3 +62,4 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 - [x] 持续集成
 - [x] 检测匿名性网站
 - [ ] Reids存储方式
+- [ ] 多级队列验证

@@ -7,6 +7,9 @@ import:
   subpackages:
   - middleware
 - package: github.com/go-sql-driver/mysql
+- package: github.com/fzzy/radix
+  subpackages:
+  - redis
 testImport:
 - package: github.com/stretchr/testify
   subpackages:

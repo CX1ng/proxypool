@@ -1,7 +1,7 @@
 package common
 
 const (
-	StorageChannelCapacity = 100
+	StorageChannelCapacity         = 100
 	StorageConcurrencyRoutineCount = 20
 )
 
@@ -15,16 +15,9 @@ const (
 	GetLimit = 20
 )
 
-var StorageMaps = make(map[string]bool)
-
 // Validator
 const (
 	VerifyUrl = "http://www.baidu.com"
 	TIME_OUT  = 5
 	TITLE     = "百度一下，你就知道"
 )
-
-func init() {
-	StorageMaps["mysql"] = true
-
-}

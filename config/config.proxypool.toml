@@ -1,11 +1,17 @@
 listen = ":7080"
-storage = "mysql"
+storage = "redis"
 
 [mysql]
 dsn = "root:@tcp(127.0.0.1:3306)/?charset=utf8mb4,utf8&parseTime=True&loc=Local"
 dbName =  "proxy_pool"
 maxOpen = 1
 maxIdle = 2
+
+[redis]
+dsn = "127.0.0.1:6379"
+timeout = "3s"
+protocol = "tcp"
+db = 1
 
 # 配置要爬取的代理网站
 [[proxy_web]]

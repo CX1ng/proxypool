@@ -1,7 +1,7 @@
 package common
 
 import (
-	"strings"
+	"time"
 
 	"github.com/BurntSushi/toml"
 )
@@ -10,6 +10,7 @@ type config struct {
 	Listen    string
 	Storage   string
 	Mysql     *MysqlConfig
+	Redis     *RedisConfig
 	ProxyWebs []WebDetail `toml:"proxy_web"`
 }
 
@@ -18,6 +19,13 @@ type MysqlConfig struct {
 	DbName  string
 	MaxOpen int
 	MaxIdle int
+}
+
+type RedisConfig struct {
+	Dsn      string
+	Timeout  Duration
+	Protocol string
+	Db       int
 }
 
 type WebDetail struct {
@@ -38,9 +46,6 @@ func InitConfig(path string) {
 	if _, err := toml.DecodeFile(path, cfg); err != nil {
 		panic(err)
 	}
-	if _, ok := StorageMaps[strings.ToLower(cfg.Storage)]; !ok {
-		panic(ErrStorageNotSupport)
-	}
 	configHandler = cfg
 }
 
@@ -49,4 +54,20 @@ func GetConfigHandler() *config {
 		panic(ErrConfigHandlerNotInit)
 	}
 	return configHandler
+}
+
+// Duration 配置中使用的时长
+type Duration struct {
+	time.Duration
+}
+
+// UnmarshalText 将字符串形式的时长信息转换为Duration类型
+func (d *Duration) UnmarshalText(text []byte) (err error) {
+	d.Duration, err = time.ParseDuration(string(text))
+	return err
+}
+
+// D 从Duration struct中取出time.Duration类型的值
+func (d *Duration) D() time.Duration {
+	return d.Duration
 }

@@ -10,4 +10,5 @@ var (
 	ErrMysqlHandlerNotInit  = errors.New("Mysql Handler Not Init")
 	ErrConfigHandlerNotInit = errors.New("Config Handler Not Init")
 	ErrParserNotSupport     = errors.New("The Parser Not Support")
+	ErrRedisHandlerNotInit  = errors.New("Redis Handler Not Init")
 )

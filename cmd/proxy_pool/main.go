@@ -6,23 +6,14 @@ import (
 	"strings"
 
 	. "github.com/CX1ng/proxypool/common"
-	. "github.com/CX1ng/proxypool/dao"
-	. "github.com/CX1ng/proxypool/dao/mysql"
+	"github.com/CX1ng/proxypool/dao"
+	"github.com/CX1ng/proxypool/dao/mysql"
+	"github.com/CX1ng/proxypool/dao/redis"
 	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/server"
 )
 
 var configPath = flag.String("config", "./config/config.dev.toml", "config path")
-
-func InitStorage() (Import, error) {
-	switch strings.ToLower(GetConfigHandler().Storage) {
-	case "mysql":
-		InitMysqlStorage(GetConfigHandler().Mysql)
-		return DBConnector{DB: GetDBHandler()}, nil
-	default:
-		return nil, ErrStorageNotSupport
-	}
-}
 
 func main() {
 	flag.Parse()
@@ -31,12 +22,12 @@ func main() {
 	InitConfig(*configPath)
 
 	//init storage
-	db, err := InitStorage()
-	if err != nil {
-		panic(err)
+	initializer, ok := dao.StorageInitializer[strings.ToLower(GetConfigHandler().Storage)]
+	if !ok {
+		panic(ErrStorageNotSupport)
 	}
 
-	storage := processord.NewStorage(db)
+	storage := processord.NewStorage(initializer())
 	for _, detail := range GetConfigHandler().ProxyWebs {
 		processor, err := processord.NewProcessor(detail, storage.Queue)
 		if err != nil {
@@ -51,4 +42,11 @@ func main() {
 	if err := http.ListenAndServe(GetConfigHandler().Listen, router); err != nil {
 		panic(err)
 	}
+}
+
+// TODO:
+// 解决Mysql/Redis引用问题，不然无法触发两个包的init函数
+func Noop() {
+	redis.Noop()
+	mysql.Noop()
 }

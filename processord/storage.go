@@ -5,16 +5,16 @@ import (
 	"time"
 
 	"github.com/CX1ng/proxypool/common"
-	"github.com/CX1ng/proxypool/models"
 	. "github.com/CX1ng/proxypool/dao"
+	"github.com/CX1ng/proxypool/models"
 )
 
 type Storage struct {
 	Queue chan []models.ProxyIP
-	imp   Import
+	imp   Importer
 }
 
-func NewStorage(imp Import) *Storage {
+func NewStorage(imp Importer) *Storage {
 	return &Storage{
 		Queue: make(chan []models.ProxyIP, common.StorageChannelCapacity),
 		imp:   imp,

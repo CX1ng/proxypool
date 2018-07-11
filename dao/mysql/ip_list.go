@@ -8,11 +8,22 @@ import (
 	"time"
 
 	"github.com/CX1ng/proxypool/common"
+	. "github.com/CX1ng/proxypool/dao"
 	. "github.com/CX1ng/proxypool/models"
 )
 
 type DBConnector struct {
 	DB *sql.DB
+}
+
+func init() {
+	StorageInitializer["mysql"] = NewMysqlConnector
+}
+
+func NewMysqlConnector() ImportExporter {
+	return &DBConnector{
+		DB: GetDBHandler(),
+	}
 }
 
 func (d DBConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
@@ -82,4 +93,8 @@ func (d DBConnector) GetLimitProxyIP(limit int) ([]string, error) {
 
 func joinIPPort(ip string, port int) string {
 	return fmt.Sprintf("http://%s:%d", ip, port)
+}
+
+func Noop() {
+
 }
