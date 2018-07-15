@@ -11,6 +11,7 @@ import (
 	"github.com/CX1ng/proxypool/dao/redis"
 	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/server"
+	"runtime"
 )
 
 var configPath = flag.String("config", "./config/config.dev.toml", "config path")
@@ -20,6 +21,7 @@ func main() {
 
 	//init config
 	InitConfig(*configPath)
+	runtime.GOMAXPROCS(GetConfigHandler().MaxProcs)
 
 	//init storage
 	initializer, ok := dao.StorageInitializer[strings.ToLower(GetConfigHandler().Storage)]
@@ -36,7 +38,7 @@ func main() {
 		go processor.Run()
 	}
 
-	go storage.GetIPInfoFromChannel()
+	go storage.VerifyAndInsertIPSWithLoop()
 
 	router := server.NewProxyPoolRouter()
 	if err := http.ListenAndServe(GetConfigHandler().Listen, router); err != nil {

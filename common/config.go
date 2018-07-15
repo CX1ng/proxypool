@@ -12,6 +12,7 @@ type config struct {
 	Mysql     *MysqlConfig
 	Redis     *RedisConfig
 	ProxyWebs []WebDetail `toml:"proxy_web"`
+	MaxProcs  int
 }
 
 type MysqlConfig struct {

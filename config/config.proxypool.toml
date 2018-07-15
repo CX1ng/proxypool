@@ -1,5 +1,6 @@
 listen = ":7080"
 storage = "redis"
+maxProcs = 1
 
 [mysql]
 dsn = "root:@tcp(127.0.0.1:3306)/?charset=utf8mb4,utf8&parseTime=True&loc=Local"

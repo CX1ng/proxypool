@@ -7,37 +7,37 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/models"
 )
 
-func BulkVerifyProxyIPs(infos []models.ProxyIP) []models.ProxyIP {
-	ipList := make([]models.ProxyIP, 0)
-	now := time.Now().Format("2006-01-02 15:04:05")
+func BulkVerifyProxyIPs(insertChan chan models.ProxyIP, infos []models.ProxyIP) {
+	var verifyGroup sync.WaitGroup
+	verifyGroup.Add(len(infos))
 	for _, info := range infos {
-		// TODO: 使用并发替换串行
-		if ok := VerifyProxy(info["type"].(string), info["ip"].(string), strconv.Itoa(info["port"].(int))); !ok {
-			continue
-		}
-		info.Set("last_verify_time", now)
-		fmt.Printf("Proxy_ip:%+v\n", info)
-		ipList = append(ipList, info)
+		go VerifyProxy(insertChan, &verifyGroup, info)
 	}
-	return ipList
+	verifyGroup.Wait()
 }
 
-func VerifyProxy(schema, ip, port string) bool {
+func VerifyProxy(insertChan chan models.ProxyIP, verifyGroup *sync.WaitGroup, info models.ProxyIP) {
+	defer verifyGroup.Done()
+	schema := info["type"].(string)
+	ip := info["ip"].(string)
+	port := strconv.Itoa(info["port"].(int))
+
 	request, err := http.NewRequest("Get", common.VerifyUrl, nil)
 	if err != nil {
-		return false
+		return
 	}
 	request.Header.Add("User-Agent", common.UserAgent)
 
 	proxyUrl, err := url.Parse(strings.ToLower(schema) + "://" + net.JoinHostPort(ip, port))
 	if err != nil {
-		return false
+		return
 	}
 
 	tr := &http.Transport{
@@ -51,11 +51,15 @@ func VerifyProxy(schema, ip, port string) bool {
 
 	resp, err := client.Do(request)
 	if err != nil {
-		return false
+		return
 	}
 	defer resp.Body.Close()
 
-	return verifyHttpResponse(resp)
+	if verifyHttpResponse(resp) {
+		info.Set("last_verify_time", time.Now().Format("2006-01-02 15:04:05"))
+		fmt.Printf("insert info:%+v\n", info)
+		insertChan <- info
+	}
 }
 
 func verifyHttpResponse(resp *http.Response) bool {

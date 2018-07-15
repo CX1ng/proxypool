@@ -68,7 +68,7 @@ func (p *Processor) ParserPage(pageNum int) error {
 	}
 	defer resp.Body.Close()
 	//后续请求连接使用net/http，配置header头
-	doc, err := goquery.NewDocumentFromResponse(resp)
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return err
 	}
