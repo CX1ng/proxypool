@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -42,21 +41,19 @@ func (i *Ip66) PageParser(doc *goquery.Document) []ProxyIP {
 	var ips []ProxyIP
 	ipTable := doc.Find("div.containerbox").Find("table").Find("tbody").Find("tr")
 	ipTable.Each(func(index int, node *goquery.Selection) {
-		port, err := strconv.Atoi(node.Find("td").Eq(1).Text())
-		if err == nil {
-			ip := node.Find("td").Eq(0).Text()
-			region := GBK2UTF(node.Find("td").Eq(2).Text())
-			rawTime := GBK2UTF(node.Find("td").Eq(4).Text())
-			ipInfo := NewProxyIP()
-			ipInfo["ip"] = ip
-			ipInfo["port"] = port
-			ipInfo["type"] = "http"
-			ipInfo["origin"] = "66ip"
-			ipInfo["region"] = region
-			ipInfo["raw_time"] = rawTime
-			ipInfo["capture_time"] = time.Now().Format("2006-01-02 15:04:05")
-			ips = append(ips, ipInfo)
-		}
+		port := node.Find("td").Eq(1).Text()
+		ip := node.Find("td").Eq(0).Text()
+		region := GBK2UTF(node.Find("td").Eq(2).Text())
+		rawTime := GBK2UTF(node.Find("td").Eq(4).Text())
+		ipInfo := NewProxyIP()
+		ipInfo["ip"] = ip
+		ipInfo["port"] = port
+		ipInfo["type"] = "http"
+		ipInfo["origin"] = "66ip"
+		ipInfo["region"] = region
+		ipInfo["raw_time"] = rawTime
+		ipInfo["capture_time"] = time.Now().Format("2006-01-02 15:04:05")
+		ips = append(ips, ipInfo)
 	})
 	return ips
 }

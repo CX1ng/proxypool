@@ -3,7 +3,6 @@ package redis
 import (
 	"encoding/json"
 	"net"
-	"strconv"
 
 	"github.com/fzzy/radix/redis"
 
@@ -59,9 +58,13 @@ func (r RedisConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
 	return r.conn.Cmd("EXEC").Err
 }
 
+// TODO： 增加查询IP信息的接口
 func (r RedisConnector) GetLimitProxyIP(limit int) ([]string, error) {
+	if limit < 0 || limit > common.GetLimit {
+		return nil, common.ErrModelLimitInvalid
+	}
 	reply := r.conn.Cmd("SRANDMEMBER", ipAddrStorageKey, limit)
-	if reply.Err == nil {
+	if reply.Err != nil {
 		return nil, reply.Err
 	}
 	proxyList := make([]string, 0, limit)
@@ -78,7 +81,7 @@ func (r RedisConnector) GetLimitProxyIP(limit int) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		if err = json.Unmarshal([]byte(info), proxyIP); err != nil {
+		if err = json.Unmarshal([]byte(info), &proxyIP); err != nil {
 			return nil, err
 		}
 		ip, err := proxyIP.IP()
@@ -89,7 +92,7 @@ func (r RedisConnector) GetLimitProxyIP(limit int) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		proxyList = append(proxyList, net.JoinHostPort(ip, strconv.Itoa(int(port))))
+		proxyList = append(proxyList, net.JoinHostPort(ip, port))
 	}
 	return proxyList, nil
 }

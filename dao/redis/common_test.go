@@ -11,7 +11,7 @@ import (
 var testRedisConnector = RedisConnector{}
 
 func init() {
-	InitConfig("../../config/config.proxypool.toml")
+	InitConfig("../../config/config.test.toml")
 	testRedisConn, err := redis.DialTimeout("tcp", "127.0.0.1:6379", 3*time.Second)
 	if err != nil {
 		panic(err)

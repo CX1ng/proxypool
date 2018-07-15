@@ -41,10 +41,10 @@ func (p ProxyIP) IP() (string, error) {
 	return ip, nil
 }
 
-func (p ProxyIP) Port() (int64, error) {
-	port, ok := p["port"].(int64)
+func (p ProxyIP) Port() (string, error) {
+	port, ok := p["port"].(string)
 	if !ok {
-		return 0, errors.New("Get Port Failed")
+		return "", errors.New("Get Port Failed")
 	}
 	return port, nil
 }

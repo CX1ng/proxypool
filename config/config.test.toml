@@ -12,7 +12,7 @@ maxIdle = 2
 dsn = "127.0.0.1:6379"
 timeout = "3s"
 protocol = "tcp"
-db = 5
+db = 1
 
 # 配置要爬取的代理网站
 [[proxy_web]]

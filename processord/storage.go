@@ -14,9 +14,9 @@ const (
 )
 
 type Storage struct {
-	Queue chan []models.ProxyIP
+	Queue      chan []models.ProxyIP
 	waitInsert chan models.ProxyIP
-	imp   Importer
+	imp        Importer
 }
 
 func NewStorage(imp Importer) *Storage {
@@ -35,9 +35,9 @@ func (s *Storage) VerifyAndInsertIPSWithLoop() {
 		select {
 		case info := <-s.Queue: // 验证队列
 			routinesCount <- true
-			go BulkVerifyProxyIPs(s.waitInsert,info)
+			go BulkVerifyProxyIPs(s.waitInsert, info)
 			<-routinesCount
-		case info := <- s.waitInsert: // 存储队列
+		case info := <-s.waitInsert: // 存储队列
 			infos = append(infos, info)
 			if len(infos) > arrayLen {
 				go s.imp.BulkInsertProxyIPs(infos)

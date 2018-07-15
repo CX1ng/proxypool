@@ -63,8 +63,7 @@ func (d DBConnector) BulkInsertProxyIPs(ips []ProxyIP) error {
 }
 
 func (d DBConnector) GetLimitProxyIP(limit int) ([]string, error) {
-	var ip, _SQL string
-	var port int
+	var ip, port, _SQL string
 	var rows *sql.Rows
 	var err error
 	if limit < 0 || limit > common.GetLimit {
@@ -91,8 +90,8 @@ func (d DBConnector) GetLimitProxyIP(limit int) ([]string, error) {
 	return proxyList, nil
 }
 
-func joinIPPort(ip string, port int) string {
-	return fmt.Sprintf("http://%s:%d", ip, port)
+func joinIPPort(ip string, port string) string {
+	return fmt.Sprintf("http://%s:%s", ip, port)
 }
 
 func Noop() {

@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"strconv"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -40,7 +39,7 @@ func (x *Xici) PageParser(doc *goquery.Document) []ProxyIP {
 	ipTable := doc.Find("table#ip_list").Find("tr")
 	ipTable.Each(func(index int, node *goquery.Selection) {
 		ip := node.Find("td").Eq(1).Text()
-		port, _ := strconv.Atoi(node.Find("td").Eq(2).Text())
+		port := node.Find("td").Eq(2).Text()
 		proxyType := node.Find("td").Eq(5).Text()
 		region := node.Find("td").Eq(3).Find("a").Text()
 		rawTime := node.Find("td").Eq(9).Text()

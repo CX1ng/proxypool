@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"net/http"
+	"runtime"
 	"strings"
 
 	. "github.com/CX1ng/proxypool/common"
@@ -11,7 +12,6 @@ import (
 	"github.com/CX1ng/proxypool/dao/redis"
 	"github.com/CX1ng/proxypool/processord"
 	"github.com/CX1ng/proxypool/server"
-	"runtime"
 )
 
 var configPath = flag.String("config", "./config/config.dev.toml", "config path")

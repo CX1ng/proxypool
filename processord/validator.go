@@ -5,7 +5,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -25,9 +24,9 @@ func BulkVerifyProxyIPs(insertChan chan models.ProxyIP, infos []models.ProxyIP) 
 
 func VerifyProxy(insertChan chan models.ProxyIP, verifyGroup *sync.WaitGroup, info models.ProxyIP) {
 	defer verifyGroup.Done()
-	schema := info["type"].(string)
-	ip := info["ip"].(string)
-	port := strconv.Itoa(info["port"].(int))
+	schema, _ := info.Type()
+	ip, _ := info.IP()
+	port, _ := info.Port()
 
 	request, err := http.NewRequest("Get", common.VerifyUrl, nil)
 	if err != nil {

@@ -15,7 +15,7 @@ const (
 	createIPListSql   = `CREATE TABLE IF NOT EXISTS ip_list(
 		id bigint PRIMARY KEY AUTO_INCREMENT,
 		ip varchar(16) NOT NULL COMMENT "抓取的代理地址",
-    	port int NOT NULL COMMENT "代理地址端口",
+    	port varchar(32) NOT NULL COMMENT "代理地址端口",
     	type varchar(8) NOT NULL COMMENT "类型(http/https)",
    	 	origin varchar(16) NOT NULL COMMENT "来源站",
     	raw_time varchar(32) NOT NULL COMMENT "源站爬取时间",

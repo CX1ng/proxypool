@@ -39,10 +39,10 @@ func TestProxyIPGetMethods(t *testing.T) {
 	as.Nil(err)
 	as.Equal(ip, "2.2.2.2")
 
-	info.Set("port", int64(80))
+	info.Set("port", "80")
 	port, err := info.Port()
 	as.Nil(err)
-	as.Equal(port, int64(80))
+	as.Equal(port, "80")
 
 	info.Set("type", "https")
 	typeValue, err := info.Type()
