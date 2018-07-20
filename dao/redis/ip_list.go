@@ -87,7 +87,6 @@ func (r RedisConnector) GetLimitProxyIP(limit int) ([]string, error) {
 		return nil, err
 	}
 
-	//TODO: 后续可优化，不用多次请求
 	for _, ipInfo := range ipInfos {
 		if err = json.Unmarshal([]byte(ipInfo), &proxyIP); err != nil {
 			return nil, err

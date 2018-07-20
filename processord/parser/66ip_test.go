@@ -24,7 +24,7 @@ func TestIp66PageParser(t *testing.T) {
 	}
 	as.Nil(err)
 	defer resp.Body.Close()
-	doc, err := goquery.NewDocumentFromResponse(resp)
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 
 	setter := &Ip66Setter{}
 	ip66 := setter.SettingParser()

@@ -1,7 +1,7 @@
 language: go
 
 go:
-  - 1.9.x
+  - 1.10.x
 
 notifications:
   email: false
@@ -17,7 +17,7 @@ before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS proxy_pool;'
   - cd ${GOPATH}/src/github.com/CX1ng/proxypool
   - mysql -e 'USE proxy_pool;SOURCE sql/ip_list.sql;'
-# dowload software
+# download software
   - go get -v github.com/Masterminds/glide
   - cd ${GOPATH}/src/github.com/Masterminds/glide && go install && cd -
 # setting env
@@ -28,7 +28,6 @@ install:
   - make test
 
 scirpt:
-  - make
 
 branches:
   only:

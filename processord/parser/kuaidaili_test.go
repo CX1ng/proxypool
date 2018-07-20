@@ -20,7 +20,7 @@ func TestKuaidailiageParser(t *testing.T) {
 	resp, err := client.Do(request)
 	as.Nil(err)
 	defer resp.Body.Close()
-	doc, err := goquery.NewDocumentFromResponse(resp)
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 
 	setter := &KuaidailiSetter{}
 	kdd := setter.SettingParser()

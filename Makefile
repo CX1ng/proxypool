@@ -29,7 +29,7 @@ linux_build: deps
 test:
 	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/dao
 	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/models
-	#FIX ME go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/processord/parser
+	#FIX ME: go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/processord/parser
 
 clean:
 	@rm -rf bin _project vendor
