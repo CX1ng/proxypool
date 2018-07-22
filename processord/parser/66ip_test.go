@@ -17,7 +17,7 @@ func TestIp66PageParser(t *testing.T) {
 	client := &http.Client{}
 	request, err := http.NewRequest("GET", "http://www.66ip.cn/1.html", nil)
 	as.Nil(err)
-	request.Header.Add("User-Agent", common.UserAgent)
+	request.Header.Add("User-Agent",common.UserAgent)
 	resp, err := client.Do(request)
 	if err != nil {
 		fmt.Printf("err:%+v\n\n", err)

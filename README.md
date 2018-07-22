@@ -63,3 +63,4 @@ ${PROJECT}/bin/proxypool --config config/config.dev.toml
 - [x] 检测匿名性网站
 - [ ] Reids存储方式
 - [ ] 多级队列验证
+- [ ] 循环采集&&定时采集
