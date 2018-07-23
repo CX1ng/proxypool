@@ -15,4 +15,5 @@ type ParserSetter interface {
 type Parser interface {
 	PageParser(doc *goquery.Document) []ProxyIP
 	GetUrl() string
+	GetMaxPageNum(maxNum int) (int, error)
 }

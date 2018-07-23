@@ -3,6 +3,7 @@ package redis
 import (
 	"encoding/json"
 	"net"
+
 	"github.com/fzzy/radix/redis"
 
 	"github.com/CX1ng/proxypool/common"
@@ -73,14 +74,14 @@ func (r RedisConnector) GetLimitProxyIP(limit int) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	ipInterfaces := make([]interface{},len(ips) + 1)
+	ipInterfaces := make([]interface{}, len(ips)+1)
 	ipInterfaces[0] = ipStorageKey
-	for i,v := range ips {
+	for i, v := range ips {
 		ipInterfaces[i+1] = v
 	}
 	result := r.conn.Cmd("HMGET", ipInterfaces...)
 	if result.Err != nil {
-		return nil,result.Err
+		return nil, result.Err
 	}
 	ipInfos, err := result.List()
 	if err != nil {
