@@ -1,26 +1,22 @@
 package parser
 
 import (
-	"net/http"
+	"strings"
 	"testing"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/CX1ng/proxypool/common"
+	"github.com/CX1ng/proxypool/utils"
 )
 
 func TestXiciageParser(t *testing.T) {
 	as := assert.New(t)
 
-	client := &http.Client{}
-	request, err := http.NewRequest("GET", "http://www.xicidaili.com/nn/1", nil)
+	html, err := utils.HttpRequestWithUserAgent("http://www.xicidaili.com/nn/1")
 	as.Nil(err)
-	request.Header.Add("User-Agent", common.UserAgent)
-	resp, err := client.Do(request)
-	as.Nil(err)
-	defer resp.Body.Close()
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 
 	setter := &XiciSetter{}
 	xici := setter.SettingParser()
@@ -49,4 +45,17 @@ func TestXiciageParser(t *testing.T) {
 	typeValue, ok := info[0]["type"]
 	as.NotNil(typeValue)
 	as.True(ok)
+}
+
+func TestGetMaxPageNumWithXici(t *testing.T) {
+	as := assert.New(t)
+	setter := XiciSetter{}
+	xc := setter.SettingParser()
+	maxPage, err := xc.GetMaxPageNum(10)
+	as.Nil(err)
+	as.Equal(10, maxPage)
+	time.Sleep(1 * time.Second)
+	maxPage, err = xc.GetMaxPageNum(999999)
+	as.Nil(err)
+	as.NotEqual(999999, maxPage)
 }

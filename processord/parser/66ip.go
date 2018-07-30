@@ -1,7 +1,9 @@
 package parser
 
 import (
+	"strings"
 	"time"
+	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
 
@@ -56,4 +58,23 @@ func (i *Ip66) PageParser(doc *goquery.Document) []ProxyIP {
 		ips = append(ips, ipInfo)
 	})
 	return ips
+}
+
+func (i *Ip66) GetMaxPageNum(maxNum int) (int, error) {
+	html, err := HttpRequestWithUserAgent(i.url + "1.html")
+	if err != nil {
+		return -1, err
+	}
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
+	if err != nil {
+		return -1, err
+	}
+	maxPageNum, err := strconv.Atoi(doc.Find("div#PageList").Find("a:nth-last-child(2)").Text())
+	if err != nil {
+		return -1, err
+	}
+	if maxPageNum < maxNum {
+		return maxPageNum, nil
+	}
+	return maxNum, nil
 }

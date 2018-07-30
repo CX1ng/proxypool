@@ -1,26 +1,22 @@
 package parser
 
 import (
-	"net/http"
 	"testing"
+	"time"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/CX1ng/proxypool/common"
+	"github.com/CX1ng/proxypool/utils"
 )
 
 func TestKuaidailiageParser(t *testing.T) {
 	as := assert.New(t)
 
-	client := &http.Client{}
-	request, err := http.NewRequest("GET", "https://www.kuaidaili.com/free/inha/1", nil)
+	html, err := utils.HttpRequestWithUserAgent("https://www.kuaidaili.com/free/inha/1")
 	as.Nil(err)
-	request.Header.Add("User-Agent", common.UserAgent)
-	resp, err := client.Do(request)
-	as.Nil(err)
-	defer resp.Body.Close()
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 
 	setter := &KuaidailiSetter{}
 	kdd := setter.SettingParser()
@@ -49,4 +45,17 @@ func TestKuaidailiageParser(t *testing.T) {
 	typeValue, ok := info[0]["type"]
 	as.NotNil(typeValue)
 	as.True(ok)
+}
+
+// FIXME: 单独执行此用例没问题，make test时会报错
+func TestGetMaxPageNumWithKdd(t *testing.T) {
+	as := assert.New(t)
+	setter := KuaidailiSetter{}
+	kdd := setter.SettingParser()
+	maxPage, err := kdd.GetMaxPageNum(10)
+	as.Nil(err)
+	time.Sleep(1 * time.Second)
+	maxPage, err = kdd.GetMaxPageNum(999999)
+	as.Nil(err)
+	as.NotEqual(999999, maxPage)
 }

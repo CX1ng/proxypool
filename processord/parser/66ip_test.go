@@ -1,31 +1,21 @@
 package parser
 
 import (
-	"fmt"
-	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/CX1ng/proxypool/common"
+	"github.com/CX1ng/proxypool/utils"
 )
 
 func TestIp66PageParser(t *testing.T) {
 	as := assert.New(t)
 
-	client := &http.Client{}
-	request, err := http.NewRequest("GET", "http://www.66ip.cn/1.html", nil)
+	html, err := utils.HttpRequestWithUserAgent("http://www.66ip.cn/1.html")
 	as.Nil(err)
-	request.Header.Add("User-Agent",common.UserAgent)
-	resp, err := client.Do(request)
-	if err != nil {
-		fmt.Printf("err:%+v\n\n", err)
-	}
-	as.Nil(err)
-	defer resp.Body.Close()
-	doc, err := goquery.NewDocumentFromReader(resp.Body)
-
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	setter := &Ip66Setter{}
 	ip66 := setter.SettingParser()
 	as.Nil(err)
@@ -53,4 +43,13 @@ func TestIp66PageParser(t *testing.T) {
 	typeValue, ok := info[0]["type"]
 	as.NotNil(typeValue)
 	as.True(ok)
+}
+
+func TestGetMaxPageNumWith66Ip(t *testing.T) {
+	as := assert.New(t)
+	setter := Ip66Setter{}
+	ip66 := setter.SettingParser()
+	pageNum, err := ip66.GetMaxPageNum(10)
+	as.Nil(err)
+	as.Equal(10, pageNum)
 }

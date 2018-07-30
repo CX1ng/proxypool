@@ -1,11 +1,14 @@
 package parser
 
 import (
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
 
 	. "github.com/CX1ng/proxypool/models"
+	. "github.com/CX1ng/proxypool/utils"
 )
 
 func init() {
@@ -54,4 +57,23 @@ func (x *Xici) PageParser(doc *goquery.Document) []ProxyIP {
 		ips = append(ips, ipInfo)
 	})
 	return ips
+}
+
+func (x *Xici) GetMaxPageNum(maxNum int) (int, error) {
+	html, err := HttpRequestWithUserAgent(x.url + "1/")
+	if err != nil {
+		return -1, err
+	}
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
+	if err != nil {
+		return -1, err
+	}
+	maxPageNum, err := strconv.Atoi(doc.Find("div.pagination").Find("a:nth-last-child(2)").Text())
+	if err != nil {
+		return -1, err
+	}
+	if maxPageNum < maxNum {
+		return maxPageNum, nil
+	}
+	return maxNum, nil
 }
