@@ -1,5 +1,6 @@
 ### Golang IP代理池
 [![Build Status](https://travis-ci.org/CX1ng/proxypool.svg?branch=master)](https://travis-ci.org/CX1ng/proxypool)
+[![Coverage Status](https://coveralls.io/repos/github/CX1ng/proxypool/badge.svg?branch=mock_test_case)](https://coveralls.io/github/CX1ng/proxypool?branch=mock_test_case)  
 #### 安装  
 基于Golang 1.9开发
 ```

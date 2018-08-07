@@ -23,9 +23,16 @@ install:
 # setting env
   - cd ${GOPATH}/src/github.com/CX1ng/proxypool
   - make deps
+# download coverage package
+  - go get github.com/mattn/goveralls
 
 script:
   - make test
+  - go test -v -covermode=count -coverprofile=coverage.out ./...
+  - ${GOPATH}/bin/goveralls -coverprofile=coverage.out -service=travis-pro -repotoken $COVERALLS_TOKEN
   - make build
 
+env:
+  global:
+    secure: "ODQi8ronTfxXJN7YZKI5/wgbc+IA7q826ockjGvLASmWEEjSTNs6Q3f3EK6n25H7gVUvk87UBuRbjzLb8nq58OGL3fOyedeyDyc92ig47MxkHyXLWXvILg39UXrSIUZFNkSgREjn8BdJyucS/nxKP2rlIroXpn4TF5HOtOix2KCwOBBmzZm+3GIwjnPsZKJ3xhkKgTxc+OS8T5u5h1EaK38bXG6gXY9Bcoe9xZP0grCOHlLZvpTOv3BDcHNg/NZPaVSBg3O+8j84SqlyjoYCgT7/podxWVWoszyJOIB4SR4j5RxsMUSUorEnIKziDjzA8U5XdfLGfLcvDAfPT01g+l4b9E788E2i8XFn3bZ/dtkf5TQ4dudq48c0Np33MudWjZDIby+TbeDxBdgRPDyb9MGEaFdXb+q0dPOe6wpzqWsm6QXf5vciLG3L+PgKygNyGfrJSJNF+6ZcedYtlWstbI+ZJO8/hXpNPZ10sbZgNE/s69tvuqt4IFwmae17CJRieHmg5eLLp8cdwosHeNuEQXP/rSi3klIycGOBDQVZYoz8DQ8A6wMQRmZpBNdK5ggZQeRdEDNCZ8Nz8pKZ/k6bhSb4pBHB/6zOb4DQTlPsvMp3g0ZE8l88FABjo82wS9abeLSNcn5HEFRTnvBHAnT0kLAnEoFf0ppr3oHT+mL/tR4="
 
