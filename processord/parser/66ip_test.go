@@ -8,10 +8,13 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/CX1ng/proxypool/utils"
+	"github.com/bouk/monkey"
 )
 
 func TestIp66PageParser(t *testing.T) {
 	as := assert.New(t)
+	mockReq := monkey.Patch(utils.HttpRequestWithUserAgent, MockReqWith66IP)
+	defer mockReq.Unpatch()
 
 	html, err := utils.HttpRequestWithUserAgent("http://www.66ip.cn/1.html")
 	as.Nil(err)
@@ -47,6 +50,9 @@ func TestIp66PageParser(t *testing.T) {
 
 func TestGetMaxPageNumWith66Ip(t *testing.T) {
 	as := assert.New(t)
+	mockReq := monkey.Patch(utils.HttpRequestWithUserAgent, MockReqWith66IP)
+	defer mockReq.Unpatch()
+
 	setter := Ip66Setter{}
 	ip66 := setter.SettingParser()
 	pageNum, err := ip66.GetMaxPageNum(10)

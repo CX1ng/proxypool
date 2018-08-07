@@ -27,9 +27,10 @@ linux_build: deps
 	$(COMMONENVVAR) $(BUILDENVVAR) make build
 
 test:
-	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/dao
+	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/dao/mysql
+	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/dao/redis
 	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/models
-	#FIX ME: go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/processord/parser
+	go test -v $(CURRENT_GIT_PATH)/$(CURRENT_GIT_REPO)/processord/parser
 
 clean:
 	@rm -rf bin _project vendor

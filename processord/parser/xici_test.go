@@ -9,10 +9,13 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/CX1ng/proxypool/utils"
+	"github.com/bouk/monkey"
 )
 
 func TestXiciageParser(t *testing.T) {
 	as := assert.New(t)
+	mockReq := monkey.Patch(utils.HttpRequestWithUserAgent, MockReqWithXici)
+	defer mockReq.Unpatch()
 
 	html, err := utils.HttpRequestWithUserAgent("http://www.xicidaili.com/nn/1")
 	as.Nil(err)
@@ -49,6 +52,9 @@ func TestXiciageParser(t *testing.T) {
 
 func TestGetMaxPageNumWithXici(t *testing.T) {
 	as := assert.New(t)
+	mockReq := monkey.Patch(utils.HttpRequestWithUserAgent, MockReqWithXici)
+	defer mockReq.Unpatch()
+
 	setter := XiciSetter{}
 	xc := setter.SettingParser()
 	maxPage, err := xc.GetMaxPageNum(10)

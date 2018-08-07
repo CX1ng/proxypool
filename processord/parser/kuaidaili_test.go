@@ -9,10 +9,13 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"github.com/CX1ng/proxypool/utils"
+	"github.com/bouk/monkey"
 )
 
 func TestKuaidailiageParser(t *testing.T) {
 	as := assert.New(t)
+	mockReq := monkey.Patch(utils.HttpRequestWithUserAgent, MockReqWithKdd)
+	defer mockReq.Unpatch()
 
 	html, err := utils.HttpRequestWithUserAgent("https://www.kuaidaili.com/free/inha/1")
 	as.Nil(err)
@@ -47,9 +50,11 @@ func TestKuaidailiageParser(t *testing.T) {
 	as.True(ok)
 }
 
-// FIXME: 单独执行此用例没问题，make test时会报错
 func TestGetMaxPageNumWithKdd(t *testing.T) {
 	as := assert.New(t)
+	mockReq := monkey.Patch(utils.HttpRequestWithUserAgent, MockReqWithKdd)
+	defer mockReq.Unpatch()
+
 	setter := KuaidailiSetter{}
 	kdd := setter.SettingParser()
 	maxPage, err := kdd.GetMaxPageNum(10)
