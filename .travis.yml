@@ -12,7 +12,7 @@ services:
   - mysql
   - redis
 
-before_install:
+install:
 # init database
   - mysql -e 'CREATE DATABASE IF NOT EXISTS proxy_pool;'
   - cd ${GOPATH}/src/github.com/CX1ng/proxypool
@@ -22,15 +22,10 @@ before_install:
   - cd ${GOPATH}/src/github.com/Masterminds/glide && go install && cd -
 # setting env
   - cd ${GOPATH}/src/github.com/CX1ng/proxypool
-
-install:
   - make deps
+
+script:
   - make test
-
-scirpt:
-
-branches:
-  only:
-    - master
+  - make build
 
 

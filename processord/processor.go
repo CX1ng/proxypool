@@ -49,7 +49,7 @@ func NewProcessor(detail WebDetail, queue chan []models.ProxyIP) (*Processor, er
 }
 
 func (p *Processor) Run() {
-	maxPage,err := p.parser.GetMaxPageNum(p.config.endPageNum)
+	maxPage, err := p.parser.GetMaxPageNum(p.config.endPageNum)
 	if err != nil {
 		return
 	}
