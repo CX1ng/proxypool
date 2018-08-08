@@ -30,10 +30,22 @@ type RedisConfig struct {
 }
 
 type WebDetail struct {
-	Name         string
-	BeginPageNum int
-	EndPageNum   int
-	TimeInterval int
+	Name             string
+	TaskType         string
+	BeginPageNum     int
+	EndPageNum       int
+	TimeInterval     Duration
+	LoopTimeInterval Duration
+}
+
+func (w *WebDetail) Validation() error {
+	if w.BeginPageNum < 0 {
+		return ErrBeginPageNumLessThanOne
+	}
+	if w.EndPageNum < 0 {
+		return ErrEndPageNumLessThanZero
+	}
+	return nil
 }
 
 type ProxyPool struct {

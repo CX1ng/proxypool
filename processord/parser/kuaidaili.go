@@ -37,7 +37,11 @@ func (k *Kuaidaili) GetUrl() string {
 	return k.url
 }
 
-func (k *Kuaidaili) PageParser(doc *goquery.Document) []ProxyIP {
+func (k *Kuaidaili) PageParser(html string) ([]ProxyIP, error) {
+	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
+	if err != nil {
+		return nil, err
+	}
 	var ips []ProxyIP
 	ipTable := doc.Find("table.table.table-bordered.table-striped").Find("tbody").Find("tr")
 	ipTable.Each(func(index int, node *goquery.Selection) {
@@ -56,7 +60,7 @@ func (k *Kuaidaili) PageParser(doc *goquery.Document) []ProxyIP {
 		ipInfo["capture_time"] = time.Now().Format("2006-01-02 15:04:05")
 		ips = append(ips, ipInfo)
 	})
-	return ips
+	return ips, nil
 }
 
 func (k *Kuaidaili) GetMaxPageNum(maxNum int) (int, error) {
@@ -72,7 +76,7 @@ func (k *Kuaidaili) GetMaxPageNum(maxNum int) (int, error) {
 	if err != nil {
 		return -1, err
 	}
-	if maxPageNum < maxNum {
+	if maxNum == 0 || maxPageNum < maxNum {
 		return maxPageNum, nil
 	}
 	return maxNum, nil
