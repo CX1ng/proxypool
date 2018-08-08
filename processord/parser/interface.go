@@ -1,8 +1,6 @@
 package parser
 
 import (
-	"github.com/PuerkitoBio/goquery"
-
 	. "github.com/CX1ng/proxypool/models"
 )
 
@@ -13,7 +11,7 @@ type ParserSetter interface {
 }
 
 type Parser interface {
-	PageParser(doc *goquery.Document) []ProxyIP
+	PageParser(html string) ([]ProxyIP, error)
 	GetUrl() string
 	GetMaxPageNum(maxNum int) (int, error)
 }

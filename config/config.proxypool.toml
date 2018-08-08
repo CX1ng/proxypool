@@ -16,12 +16,16 @@ db = 5
 
 # 配置要爬取的代理网站
 [[proxy_web]]
-name = "kuaidaili" #现支持“kuaidaili”、“xici”
-beginPageNum = 1   #开启爬取页数
-endPageNum = 100     #最大页数, 0为不限制，
-timeInterval = 30
+name = "kuaidaili"          # 现支持“kuaidaili”、“xici”
+taskType = "once"           # 支持once、loop
+beginPageNum = 1            # 开启爬取页数
+endPageNum = 100            # 最大页数, 0为不限制，
+timeInterval = "30s"        # 防止请求频率过高被封IP
+loopTimeInterval = "3600s"  # TaskType为loop时，一次采集完毕，下次开始采集的时间间隔
 [[proxy_web]]
 name = "xici"
-beginPageNum = 1 
+taskType = "once"
+beginPageNum = 1
 endPageNum = 100
-timeInterval = 30
+timeInterval = "30s"
+loopTimeInterval = "3600s"

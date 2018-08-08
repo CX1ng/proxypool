@@ -1,10 +1,8 @@
 package parser
 
 import (
-	"strings"
 	"testing"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/CX1ng/proxypool/utils"
@@ -18,11 +16,11 @@ func TestIp66PageParser(t *testing.T) {
 
 	html, err := utils.HttpRequestWithUserAgent("http://www.66ip.cn/1.html")
 	as.Nil(err)
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	setter := &Ip66Setter{}
 	ip66 := setter.SettingParser()
 	as.Nil(err)
-	info := ip66.PageParser(doc)
+	info, err := ip66.PageParser(html)
+	as.Nil(err)
 	as.NotNil(info)
 	as.NotEqual(len(info), 0)
 	ip, ok := info[0]["ip"]

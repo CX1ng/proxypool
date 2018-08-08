@@ -3,9 +3,7 @@ package parser
 import (
 	"testing"
 	"time"
-	"strings"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/CX1ng/proxypool/utils"
@@ -19,12 +17,12 @@ func TestKuaidailiageParser(t *testing.T) {
 
 	html, err := utils.HttpRequestWithUserAgent("https://www.kuaidaili.com/free/inha/1")
 	as.Nil(err)
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 
 	setter := &KuaidailiSetter{}
 	kdd := setter.SettingParser()
 	as.Nil(err)
-	info := kdd.PageParser(doc)
+	info, err := kdd.PageParser(html)
+	as.Nil(err)
 	as.NotNil(info)
 	as.NotEqual(len(info), 0)
 	ip, ok := info[0]["ip"]

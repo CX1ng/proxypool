@@ -1,11 +1,9 @@
 package parser
 
 import (
-	"strings"
 	"testing"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 
 	"github.com/CX1ng/proxypool/utils"
@@ -19,12 +17,12 @@ func TestXiciageParser(t *testing.T) {
 
 	html, err := utils.HttpRequestWithUserAgent("http://www.xicidaili.com/nn/1")
 	as.Nil(err)
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 
 	setter := &XiciSetter{}
 	xici := setter.SettingParser()
 	as.Nil(err)
-	info := xici.PageParser(doc)
+	info, err := xici.PageParser(html)
+	as.Nil(err)
 	as.NotNil(info)
 	as.NotEqual(len(info), 0)
 	ip, ok := info[0]["ip"]

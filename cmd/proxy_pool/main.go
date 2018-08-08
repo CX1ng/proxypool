@@ -35,7 +35,7 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		go processor.Run()
+		go processor.RunWithTaskType()
 	}
 
 	go storage.VerifyAndInsertIPSWithLoop()

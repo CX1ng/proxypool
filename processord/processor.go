@@ -5,8 +5,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
-
 	. "github.com/CX1ng/proxypool/common"
 	"github.com/CX1ng/proxypool/models"
 	. "github.com/CX1ng/proxypool/processord/parser"
@@ -17,14 +15,7 @@ type Processor struct {
 	url    string
 	parser Parser
 	queue  chan []models.ProxyIP
-	config *webDetail
-}
-
-type webDetail struct {
-	name         string
-	beginPageNum int
-	endPageNum   int
-	timeInterval int
+	detail WebDetail
 }
 
 func NewProcessor(detail WebDetail, queue chan []models.ProxyIP) (*Processor, error) {
@@ -34,28 +25,44 @@ func NewProcessor(detail WebDetail, queue chan []models.ProxyIP) (*Processor, er
 	}
 	parser := parserSetter.SettingParser()
 
+	if err := detail.Validation(); err != nil {
+		return nil, err
+	}
 	// 获取解析器及baseUrl
 	return &Processor{
 		url:    parser.GetUrl(),
 		parser: parser,
 		queue:  queue,
-		config: &webDetail{
-			name:         detail.Name,
-			beginPageNum: detail.BeginPageNum,
-			endPageNum:   detail.EndPageNum,
-			timeInterval: detail.TimeInterval,
-		},
+		detail: detail,
 	}, nil
 }
 
-func (p *Processor) Run() {
-	maxPage, err := p.parser.GetMaxPageNum(p.config.endPageNum)
+func (p *Processor) RunWithTaskType() {
+	switch strings.ToLower(p.detail.TaskType) {
+	case "once":
+		p.OnceRun()
+	case "loop":
+		p.LoopRun()
+	default:
+		// 记录错误
+	}
+}
+
+func (p *Processor) OnceRun() {
+	maxPage, err := p.parser.GetMaxPageNum(p.detail.EndPageNum)
 	if err != nil {
 		return
 	}
-	for i := p.config.beginPageNum; i <= maxPage; i++ {
+	for i := p.detail.BeginPageNum; i <= maxPage; i++ {
 		p.ParserPage(i)
-		time.Sleep(time.Duration(p.config.timeInterval) * time.Second)
+		time.Sleep(p.detail.TimeInterval.D())
+	}
+}
+
+func (p *Processor) LoopRun() {
+	for {
+		p.OnceRun()
+		time.Sleep(p.detail.LoopTimeInterval.D()) // 两次循环之间的时间间隔
 	}
 }
 
@@ -64,11 +71,10 @@ func (p *Processor) ParserPage(pageNum int) error {
 	if err != nil {
 		return err
 	}
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
+	infoList, err := p.parser.PageParser(html)
 	if err != nil {
 		return err
 	}
-	infoList := p.parser.PageParser(doc)
 
 	fmt.Printf("Processor:%+v\n", len(infoList))
 	p.queue <- infoList
